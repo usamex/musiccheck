@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend (lint, unit tests on PostgreSQL, contract)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: musiccheck
+          POSTGRES_PASSWORD: musiccheck-ci
+          POSTGRES_DB: musiccheck_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U musiccheck" --health-interval 3s --health-retries 20
+    env:
+      MUSICCHECK_TEST_DATABASE_URL: postgresql+psycopg://musiccheck:musiccheck-ci@127.0.0.1:5432/musiccheck_test
+    steps:
+      - uses: actions/checkout@v7
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+      - uses: astral-sh/setup-uv@v7
+      - run: uv sync --frozen
+      - run: uv run ruff check services tests conftest.py
+      - run: uv run ruff format --check services tests conftest.py
+      - run: uv run pytest -q
+      - name: Unit tests on SQLite as well
+        run: MUSICCHECK_TEST_DATABASE_URL= uv run pytest -q
+
+  stack:
+    name: Docker Compose stack + integration tests
+    runs-on: ubuntu-latest
+    env:
+      MUSICCHECK_CATALOG_ADMIN_TOKEN: ci-only-token
+      MUSICCHECK_STACK_URL: http://127.0.0.1:8000
+    steps:
+      - uses: actions/checkout@v7
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+      - uses: astral-sh/setup-uv@v7
+      - run: uv sync --frozen
+      - run: docker compose up -d --build --wait
+      - run: uv run pytest tests/integration -v
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: apps/mobile/package-lock.json
+      - name: Mobile API client against the live stack
+        working-directory: apps/mobile
+        run: npm ci && npm run contract:check -- http://127.0.0.1:8000
+      - if: failure()
+        run: docker compose logs
+      - if: always()
+        run: docker compose down -v
+
+  mobile:
+    name: Mobile (typecheck, unit tests)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/mobile
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: apps/mobile/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test -- --ci
