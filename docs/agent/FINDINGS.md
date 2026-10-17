@@ -1,0 +1,90 @@
+# Findings
+
+Engineering knowledge that should survive the session. **V** = verified by us (with evidence
+reference), **H** = hypothesis / reported but not checked. Never delete; mark superseded.
+
+## Environment
+
+- **F-001 (V, IT-001)** The original dev machine (Linux, work computer) has no Node.js. Docker
+  29.7 + Compose v5.4, FFmpeg 7.1.1, uv 0.12.21, Python 3.13 system / 3.12 via uv.
+  `scripts/node-docker.sh` runs npm/npx in `node:24-bookworm-slim` as the host user with host
+  networking (named volume `musiccheck-node-home` for the npm cache).
+- **F-002 (V, IT-001)** Latest Expo on 2026-10-17: `expo@58.0.14` (SDK 58), `expo-audio@58.0.9`,
+  `expo-router@58.0.23`, `jest-expo@58.0.11` (from `npm view`).
+- **F-003 (V, IT-001)** Latest GitHub Action majors on 2026-10-17: `actions/checkout@v7`,
+  `actions/setup-node@v7`, `astral-sh/setup-uv@v7` (from `git ls-remote --tags`).
+
+## Backend / audio pipeline
+
+- **F-004 (V, IT-001)** FastAPI 0.143 re-raises Starlette `HTTPException` from body parsing but
+  converts any other exception to a generic 400. The streaming body-size limit therefore raises
+  a `StarletteHTTPException` subclass (`BodyTooLarge`) so it surfaces as 413.
+- **F-005 (V, IT-001)** Starlette 1.8's TestClient deprecates `httpx` in favour of `httpx2`
+  (Starlette itself imports `httpx2`). Dev dependency is `httpx2`.
+- **F-006 (V, IT-001)** SQLite drops tzinfo on read; `db.UTCDateTime` normalises to aware UTC on
+  both backends (caught by a test comparing POST vs GET bodies).
+- **F-007 (V, IT-001)** `StubProvider` (services/api/tests) is a test double: passing tests that
+  use it prove response plumbing, catalog bookkeeping and error paths — **not** recognition.
+- **F-008 (V, IT-001)** FFmpeg-generated AAC/m4a of 6.0 s decodes to 6.014 s (AAC priming
+  samples); duration checks must allow small tolerance.
+- **F-009 (V, IT-001; behaviour superseded by F-017 in IT-003)** A truncated m4a (first 2 KiB,
+  missing `moov`) and an empty file fail at probe time. Originally both → 415; since IT-003 the
+  truncated m4a → 422 `invalid_audio` (empty uploads are 400 `empty_audio` before probing).
+- **F-010 (V, IT-001)** Phone-like recordings (AAC-LC mono 44.1 kHz in MPEG-4) pass through the
+  compose stack: `query` reports `codec=aac, sample_rate=44100, channels=1`.
+- **F-011 (H)** −60 dBFS RMS is a guess for the silence gate; generated pink-noise "music" sits
+  above −30 dBFS and digital silence at −200 dBFS. Real quiet-room phone noise floors need
+  measuring (QA-3).
+
+- **F-012 (V, IT-003)** Starlette's TestClient sends the whole request body in one ASGI message,
+  so in-process tests cannot prove incremental body cut-off. Verified instead against uvicorn in
+  the compose stack: a 12 MB `Transfer-Encoding: chunked` upload to identify → 413 (after
+  `100 Continue`) with one `X-Request-ID` and the full RecognitionResponse shape.
+- **F-013 (V, IT-003)** Starlette runs app-level `Exception` handlers in ServerErrorMiddleware,
+  *outside* user middleware, so their 500s lacked `X-Request-ID`. Unhandled errors are now
+  caught in `RequestIdMiddleware` (outermost user middleware).
+- **F-014 (V, IT-003)** FFmpeg stderr contains absolute temp paths and heap addresses; returning
+  it to clients leaked server internals. `AudioError.detail` now carries it to logs only.
+- **F-015 (V, IT-003, review)** SQLite silently accepts strings longer than `String(500)`;
+  PostgreSQL raises `StringDataRightTruncation`. Truncate user/tag metadata explicitly and run the
+  suite on PostgreSQL (CI does).
+- **F-016 (V, IT-003, review)** A 744 KB 20-minute Opus reference decodes to ~220 MB peak RSS
+  (PCM + copies). Admin-only today; streaming decode is BE-13.
+- **F-017 (V, IT-003)** Distinguishing "corrupt allowed container" (422) from "unsupported
+  format" (415) uses a magic-byte sniff (`audio.looks_like_allowed_container`), because ffprobe
+  fails the same way ("Invalid data found…") for both.
+
+## Mobile (Expo SDK 58)
+
+- **F-018 (V, IT-002, source + Expo's own tests; not yet on device)** In SDK 58 the global
+  `fetch` on iOS/Android is `expo/fetch`; its multipart encoder rejects RN's legacy
+  `{uri, name, type}` FormData part ("Unsupported FormDataPart implementation",
+  `node_modules/expo/src/winter/fetch/convertFormData.ts`). Upload an `expo-file-system` `File`
+  instead. Consequences: multipart filename is the recording's basename (`<uuid>.m4a`), and
+  network failures throw `FetchError`, not `TypeError`.
+- **F-019 (V, IT-002, type defs + native sources)** `RecordingPresets.HIGH_QUALITY` is stereo;
+  the app sets explicit options (AAC/.m4a, mono, 44.1 kHz, 128 kbps; Android source `mic`).
+  Real-device format still to confirm via the server's `query` block (MOBILE_TEST_PLAN CAP-3).
+- **F-020 (V, IT-002)** expo-audio needs `expo-asset` as a peer (expo-doctor). The blank
+  template needs an explicit `react-dom@19.3.0`, otherwise npm pulls 19.3.1 via expo-router's
+  radix dependency and later installs fail.
+- **F-021 (V, IT-002)** TypeScript 6 no longer auto-loads `@types` → `"types": ["jest"]` in
+  tsconfig. RNTL 14 `render`/`renderHook`/`fireEvent` are async. Overriding
+  `transformIgnorePatterns` breaks expo-router tests; keep the jest-expo preset default.
+- **F-022 (V, IT-002/IT-004)** Expo CLI tools inside `scripts/node-docker.sh` need a non-empty
+  `CI` (`CI=1`), else `GetEnv.NoBoolean`. jest-expo replaces `fetch` with a mock even under
+  `@jest-environment node`, so live-backend checks run in plain Node (`npm run contract:check`).
+- **F-023 (V, IT-002)** `npm audit` reports 47 moderate/high advisories, all in Expo CLI / Metro /
+  Jest tooling pinned by SDK 58 (mobile agent's analysis, not independently re-checked). Revisit on SDK bump.
+
+- **F-024 (V on web only, IT-005)** In the web preview the header-right `Pressable`s
+  ("History", "Clear") end exactly at the viewport edge (bounding rect right = 375 of 375). Native
+  stack headers add their own insets, so this is likely web-only — unverified on device (MOB-7).
+
+## Recognition (no experiments yet)
+
+- **H-001 (H)** NMFP / neural-audio-fp style models embed short overlapping segments (~1 s) and
+  need sequence-level matching (offset voting across segments) rather than a single nearest
+  neighbour. Unverified — confirm in ML-1/ML-3 from the actual code and papers.
+- **H-002 (H)** NMFP's published code/weights carry AGPLv3 obligations (stated in the project
+  brief). Unverified — check license files of code and weights separately in ML-1.
