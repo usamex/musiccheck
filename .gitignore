@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Local runtime data (catalog audio, SQLite, temp uploads) — never commit audio or user data
+/data/
+services/api/data/
+*.db
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Model checkpoints and datasets are downloaded, never committed (see docs/DATASETS.md)
+ml/models/*
+!ml/models/README.md
+ml/data/
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+
+# Raw Claude session exports (commit only the redacted Markdown, see docs/agent/sessions)
+session-export-*.zip
