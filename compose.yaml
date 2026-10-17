@@ -1,0 +1,44 @@
+# Local full stack: PostgreSQL + API.   docker compose up --build
+# The API listens on all interfaces so a phone on the same Wi-Fi can reach it (development only).
+name: musiccheck
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: musiccheck
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-musiccheck-dev}
+      POSTGRES_DB: musiccheck
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:${MUSICCHECK_DB_PORT:-5433}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U musiccheck -d musiccheck"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/api.Dockerfile
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      MUSICCHECK_DATABASE_URL: postgresql+psycopg://musiccheck:${POSTGRES_PASSWORD:-musiccheck-dev}@db:5432/musiccheck
+      MUSICCHECK_ENV: ${MUSICCHECK_ENV:-development}
+      MUSICCHECK_CATALOG_ADMIN_TOKEN: ${MUSICCHECK_CATALOG_ADMIN_TOKEN:-}
+      MUSICCHECK_RECOGNITION_PROVIDER: ${MUSICCHECK_RECOGNITION_PROVIDER:-none}
+    ports:
+      - "${MUSICCHECK_API_PORT:-8000}:8000"
+    volumes:
+      - apidata:/data
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  apidata:
