@@ -59,7 +59,7 @@ Priority: P0 (needed for M1) · P1 (M2/M3) · P2 (later) · P3 (exploratory).
 
 | ID | Description | Pri | Depends | Acceptance criteria | Status |
 |---|---|---|---|---|---|
-| QA-1 | Push to a GitHub remote and get `.github/workflows/ci.yml` green. | P1 | – | All CI jobs green on GitHub. | in-progress (pushed 2026-10-17; first CI run not yet reviewed) |
+| QA-1 | Push to a GitHub remote and get `.github/workflows/ci.yml` green. | P1 | – | All CI jobs green on GitHub. | done (IT-006: run 39069142524 all jobs green) |
 | QA-2 | M1 acceptance E2E: phone records indexed song → backend (real model) → correct result displayed. | P0 | ML-4, MOB-2, DS-1 | Recorded with device details; screenshot or log with request_id. | todo |
 | QA-4 | CI should test with FFmpeg 7.1 like the image (Ubuntu runners ship 6.1) — e.g. run backend tests inside the API image. | P2 | QA-1 | Same FFmpeg major in CI and prod. | todo |
 | QA-3 | Calibrate the silence gate with real phone recordings (quiet room, distant music). | P2 | MOB-2 | Chosen `SILENCE_DBFS` justified by measured levels. | todo |

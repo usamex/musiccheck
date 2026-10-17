@@ -147,4 +147,7 @@ Chronological. Never erase failed experiments; append corrections as new entries
   earlier iteration entries refer to the discarded history. A local branch
   `backup/pre-restructure` kept the old history on the original machine.
 - **Convention adopted:** small focused commits, no AI attribution (CLAUDE.md).
-- **Next action:** check the first CI run on the new history (QA-1).
+- **CI:** first GitHub run on the pre-rewrite history (tree identical to the rewritten `main` except
+  docs) — run 39069142524: Backend, Docker Compose stack + integration (incl. mobile contract
+  check), Mobile — all success. The rewrite was force-pushed by the developer.
+- **Next action:** M0 model research on a machine where model work is allowed; MOB-2 device test.

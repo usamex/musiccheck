@@ -79,7 +79,6 @@ then identify a different excerpt and expect `status: matched` with the right tr
 ## What currently fails / is missing
 - No recognition model (M0 not started) → M1 cannot be accepted.
 - Mobile app never run on a device/simulator (MOB-2); 39 manual cases PENDING.
-- CI workflow: first run triggered by the initial push to github.com/usamex/musiccheck; check the Actions tab (QA-1).
 - No re-index/bulk-ingest CLI (BE-7), no reference dataset chosen (DS-1).
 
 ## What to implement next (in order)

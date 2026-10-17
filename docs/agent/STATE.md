@@ -20,12 +20,12 @@ allowed, in parallel with DS-1 (licensed reference set) and BE-7 (bulk ingest / 
 | PostgreSQL + Alembic + Docker Compose stack | `docker compose up --wait` healthy; integration 5/5 |
 | Mobile app compiles, unit tests, bundles for Android + iOS | typecheck, 136 jest tests, `expo export` both platforms, expo-doctor 20/20 (IT-002, re-run by orchestrator: typecheck + 136 tests) |
 | Mobile API client ↔ live backend contract | `npm run contract:check` 7/7 against the compose stack (IT-004) |
+| GitHub Actions CI (backend on PostgreSQL, compose stack + integration + contract check, mobile) | run 39069142524: all 3 jobs success (IT-006) |
 
 ## Implemented but NOT verified
 - Real microphone capture, recording format on device, expo/fetch file upload, permission flows,
   Expo Go SDK 58 compatibility — **no physical device, simulator or emulator run** (MOB-2).
 - Indexing on ingest — only exercised with the test double `StubProvider` (no real model).
-- GitHub Actions workflow — first run triggered by the initial push; result not yet checked (QA-1).
 
 ## Not implemented
 - Recognition model / `NeuralRecognitionProvider` (ML-1..ML-5) — **the app cannot identify songs yet.**
@@ -46,6 +46,7 @@ allowed, in parallel with DS-1 (licensed reference set) and BE-7 (bulk ingest / 
 - `uv run pytest -q` → **76 passed** (SQLite). With `MUSICCHECK_TEST_DATABASE_URL` (Postgres 17) → **76 passed**.
 - `uv run pytest tests/integration` against compose stack → **5 passed**.
 - `ruff check` / `ruff format --check` → clean.
+- GitHub Actions run 39069142524 (same code as current `main`): Backend ✅, Docker Compose stack + integration ✅, Mobile ✅.
 - `apps/mobile`: `npm run typecheck` → clean; `npm test` → **136 passed (7 suites)**;
   `npm run contract:check` → **7/7 ok**; expo-doctor 20/20 and `expo export` android/ios → ok
   (reported by mobile agent, IT-002).
