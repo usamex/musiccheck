@@ -1,0 +1,47 @@
+# uv workspace root (virtual). Python services live in services/*.
+# See CLAUDE.md for commands. ML dependencies will be added to services/recognition
+# as an optional extra once a model passes the feasibility gate (backlog M0).
+[project]
+name = "musiccheck-workspace"
+version = "0.1.0"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "musiccheck-api",
+    "musiccheck-recognition",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "ruff>=0.8",
+    "httpx2>=2.13.1",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = ["services/api", "services/recognition"]
+
+[tool.uv.sources]
+musiccheck-api = { workspace = true }
+musiccheck-recognition = { workspace = true }
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+ignore = ["B008"]  # FastAPI's File()/Form()/Depends() defaults
+
+[tool.ruff.lint.per-file-ignores]
+"services/api/alembic/versions/*" = ["E501", "W291"]
+
+[tool.pytest.ini_options]
+testpaths = ["services/recognition/tests", "services/api/tests"]
+addopts = "-ra"
+markers = [
+    "postgres: requires MUSICCHECK_TEST_DATABASE_URL pointing at PostgreSQL",
+    "stack: requires a running docker compose stack (tests/integration)",
+]
