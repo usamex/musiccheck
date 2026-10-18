@@ -1,9 +1,11 @@
+import { MaterialIcons } from '@expo/vector-icons';
 import { Link, router, Stack } from 'expo-router';
 import { useEffect, useRef } from 'react';
-import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { ActionButton } from '../components/ActionButton';
 import { DevTools } from '../components/DevTools';
+import { IconButton } from '../components/IconButton';
 import { IdentifyButton } from '../components/IdentifyButton';
 import {
   errorCopy,
@@ -14,7 +16,7 @@ import {
 } from '../presentation/copy';
 import type { RecognitionState } from '../recognition/machine';
 import { useRecognition } from '../recognition/useRecognition';
-import { radius, spacing, useAppTheme } from '../theme/theme';
+import { radius, spacing, type as typography, useAppTheme } from '../theme/theme';
 
 function buttonMode(state: RecognitionState): 'ready' | 'listening' | 'processing' | 'busy' {
   switch (state.status) {
@@ -73,9 +75,7 @@ export default function HomeScreen() {
         options={{
           headerRight: () => (
             <Link href="/history" asChild>
-              <Pressable accessibilityRole="button" hitSlop={12} testID="history-link">
-                <Text style={{ color: colors.primary, fontSize: 16, fontWeight: '600' }}>History</Text>
-              </Pressable>
+              <IconButton icon="history" accessibilityLabel="History" testID="history-link" />
             </Link>
           ),
         }}
@@ -90,8 +90,11 @@ export default function HomeScreen() {
         />
 
         {state.status === 'listening' ? (
-          <View style={styles.recordingRow} accessibilityLiveRegion="polite">
-            <View style={[styles.recDot, { backgroundColor: colors.danger }]} />
+          <View
+            style={[styles.recordingPill, { backgroundColor: colors.surface }]}
+            accessibilityLiveRegion="polite"
+          >
+            <View style={[styles.recDot, { backgroundColor: colors.recording }]} />
             <Text style={[styles.elapsed, { color: colors.text }]} testID="elapsed">
               Recording {formatElapsed(state.elapsedMs, state.durationMs)}
             </Text>
@@ -99,7 +102,12 @@ export default function HomeScreen() {
         ) : null}
 
         {showCancel ? (
-          <ActionButton title="Cancel" onPress={recognition.cancel} testID="cancel-button" />
+          <ActionButton
+            title="Cancel"
+            icon="close"
+            onPress={recognition.cancel}
+            testID="cancel-button"
+          />
         ) : null}
 
         {state.status === 'error' ? (
@@ -118,9 +126,12 @@ export default function HomeScreen() {
           </View>
         ) : null}
 
-        <Text style={[styles.catalogNote, { color: colors.textMuted }]}>
-          Recognizes songs in our catalog — not every song ever recorded.
-        </Text>
+        <View style={styles.catalogNote}>
+          <MaterialIcons name="info-outline" size={14} color={colors.textSubtle} />
+          <Text style={[styles.catalogText, { color: colors.textSubtle }]}>
+            Recognizes songs in our catalog — not every song ever recorded.
+          </Text>
+        </View>
 
         {__DEV__ ? (
           <DevTools
@@ -181,7 +192,7 @@ function StatusPanel({ state }: { state: RecognitionState }) {
       <Text style={[styles.title, { color: state.status === 'error' ? colors.danger : colors.text }]}>
         {title}
       </Text>
-      <Text style={[styles.subtitle, { color: colors.textMuted }]}>{subtitle}</Text>
+      <Text style={[styles.subtitle, { color: colors.textSubtle }]}>{subtitle}</Text>
     </View>
   );
 }
@@ -202,13 +213,14 @@ function ErrorPanel({
   };
   const query = formatQueryInfo(state.error.query);
   return (
-    <View style={[styles.errorBox, { borderColor: colors.border, backgroundColor: colors.surface }]}>
+    <View style={[styles.errorBox, { backgroundColor: colors.surface }]}>
       <View style={styles.actionsRow}>
         {copy.actions.map((a, i) => (
           <ActionButton
             key={a}
             title={labels[a]}
             variant={i === 0 ? 'primary' : 'secondary'}
+            icon={a === 'open_settings' ? 'settings' : a === 'retry' ? 'refresh' : undefined}
             onPress={() => onAction(a)}
             testID={`error-action-${a}`}
           />
@@ -242,23 +254,37 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: spacing.lg,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.xl,
     gap: spacing.md,
   },
-  status: { alignItems: 'center', gap: spacing.xs, minHeight: 72, maxWidth: 360 },
-  title: { fontSize: 24, fontWeight: '700', textAlign: 'center' },
-  subtitle: { fontSize: 15, textAlign: 'center', lineHeight: 21 },
-  recordingRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  recDot: { width: 10, height: 10, borderRadius: 5 },
-  elapsed: { fontSize: 18, fontVariant: ['tabular-nums'], fontWeight: '600' },
+  status: { alignItems: 'center', gap: spacing.sm, minHeight: 88, maxWidth: 340 },
+  title: { ...typography.display, textAlign: 'center' },
+  subtitle: { ...typography.body, textAlign: 'center' },
+  recordingPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: radius.pill,
+  },
+  recDot: { width: 8, height: 8, borderRadius: 4 },
+  elapsed: { fontSize: 15, fontVariant: ['tabular-nums'], fontWeight: '500' },
   actionsRow: { flexDirection: 'row', gap: spacing.sm, flexWrap: 'wrap', justifyContent: 'center' },
   errorBox: {
     alignSelf: 'stretch',
     padding: spacing.md,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    gap: spacing.sm,
+    borderRadius: radius.lg,
+    gap: spacing.md,
   },
-  diag: { fontSize: 11, fontFamily: undefined, textAlign: 'left' },
-  catalogNote: { fontSize: 12, textAlign: 'center', marginTop: spacing.sm },
+  diag: { ...typography.caption, textAlign: 'left' },
+  catalogNote: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: spacing.md,
+    maxWidth: 320,
+  },
+  catalogText: { ...typography.caption, textAlign: 'center', flexShrink: 1 },
 });
