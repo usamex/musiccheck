@@ -38,16 +38,23 @@ export default function ResultScreen() {
       contentContainerStyle={styles.content}
     >
       {entry === undefined ? (
-        <ActivityIndicator />
+        <ActivityIndicator color={colors.primary} />
       ) : entry === null ? (
-        <Text style={[styles.missing, { color: colors.textMuted }]}>
+        <Text style={[styles.missing, { color: colors.textSubtle }]}>
           This result is no longer available.
         </Text>
       ) : (
         <ResultView entry={entry} showDiagnostics={__DEV__} />
       )}
       <View style={styles.actions}>
-        <ActionButton title="Identify another" variant="primary" onPress={identifyAnother} testID="identify-another" />
+        <ActionButton
+          title="Identify another"
+          variant="primary"
+          icon="mic"
+          block
+          onPress={identifyAnother}
+          testID="identify-another"
+        />
       </View>
     </ScrollView>
   );

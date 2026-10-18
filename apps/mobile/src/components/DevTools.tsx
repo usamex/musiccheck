@@ -50,15 +50,15 @@ export function DevTools({ disabled, onFilePicked }: Props) {
 
   return (
     <View style={[styles.box, { borderColor: colors.border }]} testID="dev-tools">
-      <Text style={[styles.heading, { color: colors.textMuted }]}>DEVELOPER TOOLS (dev builds only)</Text>
-      <Text style={[styles.small, { color: colors.textMuted }]}>
+      <Text style={[styles.heading, { color: colors.textSubtle }]}>DEVELOPER TOOLS (dev builds only)</Text>
+      <Text style={[styles.small, { color: colors.textSubtle }]}>
         API: {getApiBaseUrl() ?? 'EXPO_PUBLIC_API_BASE_URL not set'}
       </Text>
       <View style={styles.row}>
-        <ActionButton title="Identify from file…" onPress={pickFile} disabled={disabled} />
-        <ActionButton title="Check server" onPress={checkServer} />
+        <ActionButton title="Identify from file…" icon="audio-file" onPress={pickFile} disabled={disabled} />
+        <ActionButton title="Check server" icon="dns" onPress={checkServer} />
       </View>
-      {health ? <Text style={[styles.small, { color: colors.textMuted }]}>{health}</Text> : null}
+      {health ? <Text style={[styles.small, { color: colors.textSubtle }]}>{health}</Text> : null}
     </View>
   );
 }
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     borderWidth: 1,
     borderStyle: 'dashed',
-    borderRadius: radius.md,
+    borderRadius: radius.lg,
     gap: spacing.sm,
     alignSelf: 'stretch',
   },
