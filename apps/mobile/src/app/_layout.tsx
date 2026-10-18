@@ -1,18 +1,17 @@
-import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
+import { DarkTheme, Stack, ThemeProvider } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
 import { useAppTheme } from '../theme/theme';
 
 export default function RootLayout() {
-  const { dark, colors } = useAppTheme();
-  const base = dark ? DarkTheme : DefaultTheme;
+  const { colors } = useAppTheme();
   const navTheme = {
-    ...base,
+    ...DarkTheme,
     colors: {
-      ...base.colors,
+      ...DarkTheme.colors,
       primary: colors.primary,
       background: colors.background,
-      card: colors.surface,
+      card: colors.background,
       text: colors.text,
       border: colors.border,
     },
@@ -20,11 +19,19 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={navTheme}>
-      <StatusBar style="auto" />
-      <Stack screenOptions={{ headerTintColor: colors.primary, headerTitleStyle: { color: colors.text } }}>
+      <StatusBar style="light" />
+      <Stack
+        screenOptions={{
+          headerTintColor: colors.textMuted,
+          headerTitleStyle: { color: colors.text, fontWeight: '500', fontSize: 20 },
+          headerStyle: { backgroundColor: colors.background },
+          headerShadowVisible: false,
+          contentStyle: { backgroundColor: colors.background },
+        }}
+      >
         <Stack.Screen name="index" options={{ title: 'MusicCheck' }} />
         <Stack.Screen name="history" options={{ title: 'History' }} />
-        <Stack.Screen name="result" options={{ title: 'Result' }} />
+        <Stack.Screen name="result" options={{ title: '' }} />
       </Stack>
     </ThemeProvider>
   );
