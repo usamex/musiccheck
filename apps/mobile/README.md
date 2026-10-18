@@ -100,6 +100,13 @@ There is no `lint` script: the blank-typescript template ships no ESLint config,
 Unit tests use test doubles for fetch, expo-audio, expo-file-system and storage. They prove
 state handling and contract mapping, **not** that the microphone records on a device.
 
+## Design
+
+Dark-only theme based on the Gemini app's dark palette (ADR-0006): tokens in
+`src/theme/theme.ts`, the blue → purple → pink gradient via `expo-linear-gradient`, Material icons
+via `@expo/vector-icons` (+ `expo-font`). Jest renders icons as text placeholders
+(`test/setup.tsx`), so icon appearance is only checked visually.
+
 ## Recording format
 
 Defined explicitly in `src/recognition/recordingConfig.ts` (not via a preset):

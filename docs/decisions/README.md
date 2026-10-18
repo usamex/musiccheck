@@ -11,3 +11,4 @@ set the old one's status to `Superseded by ADR-XXXX` — do not delete history.
 | [0003](ADR-0003-recognition-provider-abstraction.md) | Recognition provider abstraction | Accepted |
 | [0004](ADR-0004-model-versioned-index.md) | Model-versioned index bookkeeping | Accepted |
 | [0005](ADR-0005-no-model-yet-honest-unavailability.md) | Build app/API before the model, with honest unavailability | Accepted |
+| [0006](ADR-0006-dark-visual-design.md) | Dark-only visual design based on Gemini's dark palette | Accepted |
