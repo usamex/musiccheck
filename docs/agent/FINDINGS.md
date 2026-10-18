@@ -81,6 +81,20 @@ reference), **H** = hypothesis / reported but not checked. Never delete; mark su
   ("History", "Clear") end exactly at the viewport edge (bounding rect right = 375 of 375). Native
   stack headers add their own insets, so this is likely web-only — unverified on device (MOB-7).
 
+- **F-025 (V, IT-007)** `@expo/vector-icons` requires `expo-font` as a directly installed peer
+  (expo-doctor: "may crash outside of Expo Go"). Under Jest it fails with "Module … is missing from
+  the asset registry"; `apps/mobile/test/setup.tsx` mocks the icon sets as Text placeholders.
+- **F-026 (V, IT-007, web)** expo-router `<Link asChild>` injects its own `style` into the child on
+  web; spreading props *after* our `style` dropped the button's inset. `IconButton` spreads first.
+  With that, the header icon sits 8 px from the edge (bounding rect right = 367 of 375) — resolves
+  F-024 on web; device check pending (MOB-7).
+- **F-027 (V, IT-007)** An always-running `Animated.loop` on the idle screen made RNTL report
+  "overlapping act() calls" and failed later navigation tests. Idle visuals are static; loops run
+  only while listening.
+- **F-028 (V, IT-007)** Gemini dark tokens read from gemini.google.com's computed
+  `--gem-sys-color--*` variables (2026-10-18); the stylesheet's first occurrences are the *light*
+  values — read computed values on a `dark-theme` page. Token table in ADR-0006.
+
 ## Recognition (no experiments yet)
 
 - **H-001 (H)** NMFP / neural-audio-fp style models embed short overlapping segments (~1 s) and

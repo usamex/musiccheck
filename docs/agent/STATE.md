@@ -20,10 +20,11 @@ allowed, in parallel with DS-1 (licensed reference set) and BE-7 (bulk ingest / 
 | PostgreSQL + Alembic + Docker Compose stack | `docker compose up --wait` healthy; integration 5/5 |
 | Mobile app compiles, unit tests, bundles for Android + iOS | typecheck, 136 jest tests, `expo export` both platforms, expo-doctor 20/20 (IT-002, re-run by orchestrator: typecheck + 136 tests) |
 | Mobile API client ↔ live backend contract | `npm run contract:check` 7/7 against the compose stack (IT-004) |
+| Dark redesign (Gemini palette, ADR-0006) renders: home idle/listening/error, history, result | web preview screenshots (IT-007); typecheck, 136 tests, expo-doctor 20/20, android+ios bundle export |
 | GitHub Actions CI (backend on PostgreSQL, compose stack + integration + contract check, mobile) | run 39069142524: all 3 jobs success (IT-006) |
 
 ## Implemented but NOT verified
-- Real microphone capture, recording format on device, expo/fetch file upload, permission flows,
+- Dark redesign on a real device (MOB-8). Real microphone capture, recording format on device, expo/fetch file upload, permission flows,
   Expo Go SDK 58 compatibility — **no physical device, simulator or emulator run** (MOB-2).
 - Indexing on ingest — only exercised with the test double `StubProvider` (no real model).
 

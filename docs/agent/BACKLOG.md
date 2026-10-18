@@ -52,7 +52,8 @@ Priority: P0 (needed for M1) · P1 (M2/M3) · P2 (later) · P3 (exploratory).
 | MOB-3 | Generate TS types from `packages/shared/openapi.json` (e.g. openapi-typescript) and check drift in CI. | P2 | MOB-1 | No hand-maintained contract types. | todo |
 | MOB-5 | Release hardening from IT-002: block unneeded default Android permissions (storage, SYSTEM_ALERT_WINDOW), set iOS bundle id / Android package, restrict ATS/cleartext to dev, add ESLint (`npx expo lint`). | P2 | MOB-2 | expo-doctor + introspected config show only RECORD_AUDIO/INTERNET (+ required). | todo |
 | MOB-6 | Contract check of the real client against the live API (`npm run contract:check`), in CI stack job. | P1 | MOB-1 | 7/7 checks pass against compose stack. | done (IT-004; CI not yet run on GitHub) |
-| MOB-7 | Check header-right button spacing ("History", "Clear") on iOS + Android; add padding if flush (F-024). | P3 | MOB-2 | Screenshot from each platform. | todo |
+| MOB-7 | Check header-right button spacing on iOS + Android (F-024). | P3 | MOB-2 | Screenshot from each platform. | fixed on web (IT-007, F-026); device check pending |
+| MOB-8 | Device check of the dark redesign (ADR-0006): gradients, shadows/glow, icon font, listening ripples, contrast in sunlight. | P1 | MOB-2 | Screenshots from iOS + Android in MOBILE_TEST_PLAN. | todo |
 | MOB-4 | Development build (EAS) incl. cleartext/ATS config for LAN dev and HTTPS for prod. | P2 | MOB-2 | Installable build on both platforms. | todo |
 
 ## QA / process

@@ -151,3 +151,27 @@ Chronological. Never erase failed experiments; append corrections as new entries
   docs) — run 39069142524: Backend, Docker Compose stack + integration (incl. mobile contract
   check), Mobile — all success. The rewrite was force-pushed by the developer.
 - **Next action:** M0 model research on a machine where model work is allowed; MOB-2 device test.
+
+---
+
+## IT-007 — Dark redesign with Gemini's palette
+
+- **Date:** 2026-10-18
+- **Task:** Developer: "work on the design of the app. Use the dark colors that's in gemini app".
+- **Research:** read Gemini's dark tokens from gemini.google.com's computed CSS variables (F-028).
+- **Changes:** dark-only theme tokens (ADR-0006); `expo-linear-gradient`, `@expo/vector-icons`,
+  `expo-font`; gradient identify disc with mic / sound-wave icon, stacked-halo glow, gradient
+  ripples while listening; pill `ActionButton` (filled / tonal, optional icon); `IconButton` for
+  header actions (history, delete); recording pill; restyled error card, result (gradient artwork
+  tile, provider chip, details card, full-width CTA), history (cards with gradient tiles,
+  chevrons, empty state), dev tools. Jest icon mock (F-025).
+- **Tests:** typecheck clean; 136/136 jest; `expo-doctor` 20/20 (after adding `expo-font`);
+  `npm run export:check` android + ios OK.
+- **Visual check (web preview, temporary react-native-web, reverted):** home idle, listening
+  (synthetic in-browser audio stream because the pane blocks the mic), "App not configured"
+  error, history and result with a localStorage-only SAMPLE entry (removed). Fixed during the
+  check: flat glow → stacked halos; label overlapping glow; header icon flush (F-026); duplicate
+  "Listening…" label.
+- **Failures along the way:** icon font under Jest (F-025); idle animation loop broke RNTL
+  (F-027); `forwardRef` typing with React 19 → plain function, `ref` via props.
+- **Not verified:** any device rendering (MOB-8).
