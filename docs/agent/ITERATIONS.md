@@ -194,3 +194,30 @@ Chronological. Never erase failed experiments; append corrections as new entries
   raw file and GitHub API show plain GPLv3 (F-029). Four over-reaching claims refuted in
   verification (see MODEL_RESEARCH.md).
 - **Next action:** ML-1b (licence) → ML-3 on a non-work machine.
+
+---
+
+## IT-009 — "Listen on" buttons (Spotify, YouTube Music, Apple Music)
+
+- **Date:** 2026-10-18 (implemented) – 2026-10-20 (committed); logged after IT-008.
+- **Task:** Developer: matched songs should link to Spotify, YouTube Music and Apple Music,
+  "depending which apps the user is using".
+- **Research:** Expo Linking / "linking into other apps" docs, expo-build-properties
+  `manifestQueries`, Spotify content-linking docs, scheme availability per service (F-033).
+- **Design:** search links for "title artist" (no service track IDs in our catalog; exact links
+  = BE-15); https URLs open the app via universal / app links or fall back to the website;
+  hide only apps *confirmed* missing, list installed apps and the last-used service first
+  (AsyncStorage), show all when detection is impossible (Expo Go, web) or everything is missing.
+- **Changes:** `app.json` (iOS LSApplicationQueriesSchemes `spotify`, `music`; Android query for
+  `spotify:` via expo-build-properties), `src/listen/services.ts` (definitions, detection,
+  ordering), `useListenServices.ts`, `ListenButtons.tsx`, ResultView `listen` slot.
+- **Tests:** 17 new (URL encoding, detection per platform / Expo Go / web / rejected probes,
+  ordering, opening + remembered preference, open failure) → 153 total pass; typecheck clean;
+  `export:check` android + ios OK; `expo config --type introspect` shows the iOS schemes and the
+  Android `<queries>` entry.
+- **Failures along the way:** Jest call history leaked between tests because RN's Linking mocks
+  are shared `jest.fn`s (fixed with `jest.clearAllMocks()`); the previous session ended while
+  building a web preview (package files verified clean afterwards); first commit attempt bundled
+  every file (F-034) — undone before pushing and redone with `/usr/bin/git`.
+- **Not verified:** any device behaviour (MOB-9). expo-doctor 19/20 due to new SDK patches (F-035).
+- **Next action:** MOB-9 together with MOB-2 on a device / development build.

@@ -107,6 +107,17 @@ Dark-only theme based on the Gemini app's dark palette (ADR-0006): tokens in
 via `@expo/vector-icons` (+ `expo-font`). Jest renders icons as text placeholders
 (`test/setup.tsx`), so icon appearance is only checked visually.
 
+## "Listen on" buttons
+
+The result screen links to Spotify, YouTube Music and Apple Music (`src/listen/`). Links are
+**searches** for "title artist" (exact track links need server-side lookup, backlog BE-15) and use
+https URLs, which open the app if installed and the website otherwise. Apps confirmed as not
+installed are hidden; the last service the user tapped is listed first.
+
+Detection needs `LSApplicationQueriesSchemes` (iOS) and Android `<queries>` from `app.json`, which
+only apply to development/production builds — **in Expo Go all three buttons are always shown**.
+Detectable: Spotify (iOS, Android), Apple Music (iOS). YouTube Music cannot be detected.
+
 ## Recording format
 
 Defined explicitly in `src/recognition/recordingConfig.ts` (not via a preset):

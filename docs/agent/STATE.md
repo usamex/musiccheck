@@ -21,6 +21,7 @@ allowed, in parallel with DS-1 (licensed reference set) and BE-7 (bulk ingest / 
 | Mobile app compiles, unit tests, bundles for Android + iOS | typecheck, 136 jest tests, `expo export` both platforms, expo-doctor 20/20 (IT-002, re-run by orchestrator: typecheck + 136 tests) |
 | Mobile API client ↔ live backend contract | `npm run contract:check` 7/7 against the compose stack (IT-004) |
 | Dark redesign (Gemini palette, ADR-0006) renders: home idle/listening/error, history, result | web preview screenshots (IT-007); typecheck, 136 tests, expo-doctor 20/20, android+ios bundle export |
+| "Listen on" Spotify / YouTube Music / Apple Music search buttons with installed-app detection | 153 jest tests (17 new), typecheck, android+ios bundle export (IT-009); not on device |
 | GitHub Actions CI (backend on PostgreSQL, compose stack + integration + contract check, mobile) | run 39069142524: all 3 jobs success (IT-006) |
 
 ## Implemented but NOT verified
@@ -36,6 +37,7 @@ allowed, in parallel with DS-1 (licensed reference set) and BE-7 (bulk ingest / 
 ## Known failures / risks
 - None failing in automated checks.
 - Silence gate −60 dBFS is uncalibrated (F-011).
+- expo-doctor 19/20 since new SDK 58 patch releases (F-035, MOB-10).
 - `npm audit`: 47 advisories in Expo/Metro/Jest tooling (F-023).
 - FFmpeg not yet sandboxed beyond protocol/format allowlists + timeouts (BE-12).
 

@@ -42,6 +42,7 @@ Priority: P0 (needed for M1) · P1 (M2/M3) · P2 (later) · P3 (exploratory).
 | BE-11 | Structured JSON logs + metrics (latency per stage). | P2 | – | Per-stage timings visible. | todo |
 | BE-12 | FFmpeg sandboxing: `-codec_whitelist` for audio decoders, CPU/memory rlimits (via `prlimit`, not `preexec_fn` — threads), scrubbed env without DB credentials. From review IT-003 L9. | P1 | – | Malicious-input tests; memory cap enforced. | todo |
 | BE-13 | Body-limit path matching under a proxy `root_path` (review L12); stream reference decode in chunks to cut ~220 MB peak for 20-min files (L10). | P2 | – | Tests with root_path; measured peak RSS. | todo |
+| BE-15 | Exact service links: resolve Spotify / Apple Music / YouTube Music track URLs server-side (e.g. by ISRC via service APIs or a link resolver), store per track, return in the API; app falls back to search links. Secrets stay server-side. | P2 | DS-1 | Matched result opens the exact track where available. | todo |
 | BE-14 | Catalog writes while disabled: return 503 `catalog_admin_disabled` instead of 413 for large bodies (review L2, cosmetic). | P3 | – | Test. | todo |
 
 ## Mobile
@@ -55,6 +56,8 @@ Priority: P0 (needed for M1) · P1 (M2/M3) · P2 (later) · P3 (exploratory).
 | MOB-6 | Contract check of the real client against the live API (`npm run contract:check`), in CI stack job. | P1 | MOB-1 | 7/7 checks pass against compose stack. | done (IT-004; CI not yet run on GitHub) |
 | MOB-7 | Check header-right button spacing on iOS + Android (F-024). | P3 | MOB-2 | Screenshot from each platform. | fixed on web (IT-007, F-026); device check pending |
 | MOB-8 | Device check of the dark redesign (ADR-0006): gradients, shadows/glow, icon font, listening ripples, contrast in sunlight. | P1 | MOB-2 | Screenshots from iOS + Android in MOBILE_TEST_PLAN. | todo |
+| MOB-9 | Device check of "Listen on" buttons in a development build (iOS + Android): detection hides missing Spotify / Apple Music, links open the app or website, last choice is listed first. Expo Go shows all three by design. | P1 | MOB-2 | Results per platform in MOBILE_TEST_PLAN. | todo |
+| MOB-10 | Update Expo SDK 58 patch releases (expo-doctor 19/20, F-035) in a separate commit; rerun typecheck, tests, export:check. | P2 | – | expo-doctor 20/20. | todo |
 | MOB-4 | Development build (EAS) incl. cleartext/ATS config for LAN dev and HTTPS for prod. | P2 | MOB-2 | Installable build on both platforms. | todo |
 
 ## QA / process

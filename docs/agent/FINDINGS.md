@@ -95,6 +95,22 @@ reference), **H** = hypothesis / reported but not checked. Never delete; mark su
   `--gem-sys-color--*` variables (2026-10-18); the stylesheet's first occurrences are the *light*
   values — read computed values on a `dark-theme` page. Token table in ADR-0006.
 
+- **F-033 (V from docs + config introspection, IT-009; not on device)** Installed-app detection
+  for "Listen on": `Linking.canOpenURL` needs iOS `LSApplicationQueriesSchemes` (app.json
+  `ios.infoPlist`) and Android 11+ `<queries>` (expo-build-properties `android.manifestQueries`).
+  Detectable: Spotify (`spotify:` iOS + Android), Apple Music (`music:` iOS only). YouTube Music
+  has no documented scheme on either platform, Apple Music none on Android → shown as "unknown".
+  Expo docs: this configuration "cannot be tested with Expo Go" → the app reports all as unknown
+  there (`isRunningInExpoGo()`). Note `Constants.executionEnvironment === 'storeClient'` also
+  covers dev-client builds, so it cannot identify Expo Go. All three https search URLs
+  (open.spotify.com/search, music.youtube.com/search, music.apple.com/search) returned 200.
+- **F-034 (V, IT-009)** In this shell, `git add <paths> && git commit` produced a commit with
+  *every* changed and untracked file (the command proxy rewrites git invocations). Calling
+  `/usr/bin/git` directly respected the paths. Check `git show --stat HEAD` after committing.
+- **F-035 (V, IT-009)** Expo released SDK 58 patch versions after 2026-10-18; `expo-doctor` now
+  reports 19/20 (patch mismatches: expo 58.0.16, expo-asset, expo-file-system, expo-font,
+  expo-router). Not caused by our changes; update in its own commit (MOB-10).
+
 ## Recognition (no experiments yet)
 
 - **H-001 (H → confirmed from literature, IT-008)** NMFP / NAFP embed 1 s segments with a 0.5 s
