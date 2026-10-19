@@ -9,7 +9,13 @@
     "userInterfaceStyle": "dark",
     "backgroundColor": "#131314",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "LSApplicationQueriesSchemes": [
+          "spotify",
+          "music"
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -32,7 +38,24 @@
         }
       ],
       "expo-asset",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "manifestQueries": {
+              "intent": [
+                {
+                  "action": "VIEW",
+                  "data": {
+                    "scheme": "spotify"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
     ]
   }
 }
