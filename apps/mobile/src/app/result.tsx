@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { ActionButton } from '../components/ActionButton';
+import { ListenButtons } from '../components/ListenButtons';
 import { ResultView } from '../components/ResultView';
 import { findResult, type HistoryEntry } from '../history';
 import { spacing, useAppTheme } from '../theme/theme';
@@ -44,7 +45,16 @@ export default function ResultScreen() {
           This result is no longer available.
         </Text>
       ) : (
-        <ResultView entry={entry} showDiagnostics={__DEV__} />
+        <ResultView
+          entry={entry}
+          showDiagnostics={__DEV__}
+          listen={
+            <ListenButtons
+              title={entry.response.track.title}
+              artist={entry.response.track.artist}
+            />
+          }
+        />
       )}
       <View style={styles.actions}>
         <ActionButton

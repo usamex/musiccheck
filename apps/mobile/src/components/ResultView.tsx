@@ -18,8 +18,19 @@ const ART_SIZE = 232;
 
 type IconName = ComponentProps<typeof MaterialIcons>['name'];
 
-/** Presentational result card (no navigation, no I/O) — render-tested. */
-export function ResultView({ entry, showDiagnostics }: { entry: HistoryEntry; showDiagnostics: boolean }) {
+/**
+ * Presentational result card (no navigation, no I/O) — render-tested. `listen` is an optional
+ * slot (the "Listen on" buttons) rendered under the provider chip.
+ */
+export function ResultView({
+  entry,
+  showDiagnostics,
+  listen,
+}: {
+  entry: HistoryEntry;
+  showDiagnostics: boolean;
+  listen?: ReactNode;
+}) {
   const { colors } = useAppTheme();
   const { response } = entry;
   const { track } = response;
@@ -79,6 +90,8 @@ export function ResultView({ entry, showDiagnostics }: { entry: HistoryEntry; sh
           </Text>
         </View>
       ) : null}
+
+      {listen}
 
       <View style={[styles.card, { backgroundColor: colors.surface }]}>
         {confidence ? (
