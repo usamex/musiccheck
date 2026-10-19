@@ -175,3 +175,22 @@ Chronological. Never erase failed experiments; append corrections as new entries
 - **Failures along the way:** icon font under Jest (F-025); idle animation loop broke RNTL
   (F-027); `forwardRef` typing with React 19 → plain function, `ref` via props.
 - **Not verified:** any device rendering (MOB-8).
+
+---
+
+## IT-008 — Model desk research (no model work)
+
+- **Date:** 2026-10-20
+- **Task:** ML-1 + ML-2 as desk research only (developer: "figure out which AI model … don't add
+  it"; work computer → nothing downloaded/installed/run).
+- **Method:** `deep-research` workflow: 5 angles, 19 primary sources, 95 claims extracted, 25 key
+  claims verified by 3 independent agents each (21 confirmed, 4 refuted); orchestrator re-checked
+  both licences against raw LICENSE files, GitHub API and Zenodo API.
+- **Result:** primary NMFP `nmfp-triplet` (only public weights with real phone/room results;
+  licence ambiguity GPLv3/AGPLv3 must be resolved first), fallback Pretrained Conformer-large
+  (CC-BY-4.0, no real-recording evidence), GraFPrint third (weights unlicensed). Full write-up
+  and EXP-001 plan: docs/MODEL_RESEARCH.md; findings F-029..F-032; backlog ML-1b added.
+- **Failures / corrections:** a WebFetch page summary claimed NMFP's LICENSE file is AGPL; the
+  raw file and GitHub API show plain GPLv3 (F-029). Four over-reaching claims refuted in
+  verification (see MODEL_RESEARCH.md).
+- **Next action:** ML-1b (licence) → ML-3 on a non-work machine.

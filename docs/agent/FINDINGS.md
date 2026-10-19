@@ -97,8 +97,22 @@ reference), **H** = hypothesis / reported but not checked. Never delete; mark su
 
 ## Recognition (no experiments yet)
 
-- **H-001 (H)** NMFP / neural-audio-fp style models embed short overlapping segments (~1 s) and
-  need sequence-level matching (offset voting across segments) rather than a single nearest
-  neighbour. Unverified — confirm in ML-1/ML-3 from the actual code and papers.
-- **H-002 (H)** NMFP's published code/weights carry AGPLv3 obligations (stated in the project
-  brief). Unverified — check license files of code and weights separately in ML-1.
+- **H-001 (H → confirmed from literature, IT-008)** NMFP / NAFP embed 1 s segments with a 0.5 s
+  hop; retrieval is FAISS top-k per segment + offset-aligned score aggregation, not a single
+  nearest neighbour (arXiv 2010.11910, 2506.22661). Still to confirm in code during ML-3.
+- **H-002 (superseded by F-029)** "NMFP is AGPLv3" — the sources disagree, see F-029.
+- **F-029 (V, IT-008)** NMFP licence is inconsistent: README says code + weights are AGPLv3; the
+  `LICENSE` file is plain GPLv3 (GitHub API `GPL-3.0`); Zenodo record 15719945 lists the weights
+  as GPL-3.0-or-later. A WebFetch page summary wrongly reported the LICENSE file as AGPL — read
+  raw files/APIs for licence questions. Needs written clarification from the authors (ML-1b).
+- **F-030 (V, IT-008)** Downloadable weights exist for NMFP (Zenodo 15719945: nmfp-triplet.zip
+  172,872,470 B, md5 ee8a3358fc5e5cdd09d6d2245d395021) and the Pretrained Conformers (Zenodo
+  16902363, CC-BY-4.0: 6.1 / 35.3 / 104.9 MB). GraFPrint weights (HF chymaera96/grafp_db) have
+  no licence. No usable official NAFP (mimbres) weights were found.
+- **F-031 (R, IT-008)** Only NMFP reports real phone/room results: 63.9 / 75.0 / 82.0 / 84.6 %
+  top-1 at 1 / 2 / 5 / 10 s (3,692 captures, ~95k-track DB), vs 95.6 % synthetic at 10 s.
+  Synthetic benchmarks overstate real-world accuracy (two independent papers) → decide on our
+  own device recordings (EXP-001). No source measures false accepts on unknown tracks.
+- **F-032 (R, IT-008)** Raw tagging/semantic embeddings (CLAP, MusicFM, raw MERT/MuQ) are not
+  evidenced as exact-recording identifiers; foundation-model fingerprinters always add a
+  contrastively trained head. Full write-up: docs/MODEL_RESEARCH.md.

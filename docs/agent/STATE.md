@@ -53,6 +53,8 @@ allowed, in parallel with DS-1 (licensed reference set) and BE-7 (bulk ingest / 
   (reported by mobile agent, IT-002).
 
 ## Next recommended action
-1. On a machine where model work is OK: ML-1 + ML-2 research → ML-3 feasibility experiment.
+1. Model desk research is done (IT-008, docs/MODEL_RESEARCH.md): primary NMFP nmfp-triplet,
+   fallback Pretrained Conformer-large. Next: ML-1b licence decision, then ML-3 (EXP-001) on a
+   machine where model work is OK.
 2. Meanwhile (any machine): DS-1 + BE-7; MOB-2 device smoke test of the current
    "model unavailable" flow (proves capture + upload + format).
