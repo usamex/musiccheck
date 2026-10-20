@@ -76,6 +76,9 @@ reference), **H** = hypothesis / reported but not checked. Never delete; mark su
   `@jest-environment node`, so live-backend checks run in plain Node (`npm run contract:check`).
 - **F-023 (V, IT-002)** `npm audit` reports 47 moderate/high advisories, all in Expo CLI / Metro /
   Jest tooling pinned by SDK 58 (mobile agent's analysis, not independently re-checked). Revisit on SDK bump.
+  Update 2026-10-20 (IT-010): 55 (25 moderate, 30 high, 0 critical), identical before and after
+  the SDK 58 patch update; the increase since IT-002 comes from later dependencies and newly
+  published advisories.
 
 - **F-024 (V on web only, IT-005)** In the web preview the header-right `Pressable`s
   ("History", "Clear") end exactly at the viewport edge (bounding rect right = 375 of 375). Native
@@ -110,6 +113,8 @@ reference), **H** = hypothesis / reported but not checked. Never delete; mark su
 - **F-035 (V, IT-009)** Expo released SDK 58 patch versions after 2026-10-18; `expo-doctor` now
   reports 19/20 (patch mismatches: expo 58.0.16, expo-asset, expo-file-system, expo-font,
   expo-router). Not caused by our changes; update in its own commit (MOB-10).
+  **Resolved IT-010:** `npx expo install --fix` → expo 58.0.16, expo-asset 58.0.17,
+  expo-file-system 58.0.10, expo-font 58.0.9, expo-router 58.0.24; expo-doctor 20/20.
 
 ## Recognition (no experiments yet)
 

@@ -57,7 +57,7 @@ Priority: P0 (needed for M1) · P1 (M2/M3) · P2 (later) · P3 (exploratory).
 | MOB-7 | Check header-right button spacing on iOS + Android (F-024). | P3 | MOB-2 | Screenshot from each platform. | fixed on web (IT-007, F-026); device check pending |
 | MOB-8 | Device check of the dark redesign (ADR-0006): gradients, shadows/glow, icon font, listening ripples, contrast in sunlight. | P1 | MOB-2 | Screenshots from iOS + Android in MOBILE_TEST_PLAN. | todo |
 | MOB-9 | Device check of "Listen on" buttons in a development build (iOS + Android): detection hides missing Spotify / Apple Music, links open the app or website, last choice is listed first. Expo Go shows all three by design. | P1 | MOB-2 | Results per platform in MOBILE_TEST_PLAN. | todo |
-| MOB-10 | Update Expo SDK 58 patch releases (expo-doctor 19/20, F-035) in a separate commit; rerun typecheck, tests, export:check. | P2 | – | expo-doctor 20/20. | todo |
+| MOB-10 | Update Expo SDK 58 patch releases (expo-doctor 19/20, F-035) in a separate commit; rerun typecheck, tests, export:check. | P2 | – | expo-doctor 20/20. | done (IT-010) |
 | MOB-4 | Development build (EAS) incl. cleartext/ATS config for LAN dev and HTTPS for prod. | P2 | MOB-2 | Installable build on both platforms. | todo |
 
 ## QA / process

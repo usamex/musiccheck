@@ -221,3 +221,16 @@ Chronological. Never erase failed experiments; append corrections as new entries
   every file (F-034) — undone before pushing and redone with `/usr/bin/git`.
 - **Not verified:** any device behaviour (MOB-9). expo-doctor 19/20 due to new SDK patches (F-035).
 - **Next action:** MOB-9 together with MOB-2 on a device / development build.
+
+---
+
+## IT-010 — Expo SDK 58 patch update
+
+- **Date:** 2026-10-20
+- **Task:** MOB-10 (expo-doctor 19/20 after new SDK 58 patch releases, F-035).
+- **Change:** `npx expo install --fix` → expo ~58.0.16, expo-router ~58.0.24 in package.json;
+  lockfile moves expo-asset 58.0.17, expo-file-system 58.0.10, expo-font 58.0.9 and their
+  internal dependencies.
+- **Tests:** expo-doctor 20/20; typecheck clean; 153/153 jest; `export:check` android + ios OK;
+  clean `npm ci` from the new lockfile OK. `npm audit` unchanged by the update (55).
+- **Not verified:** device behaviour (MOB-2/MOB-8/MOB-9).

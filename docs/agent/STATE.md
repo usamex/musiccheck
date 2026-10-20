@@ -37,15 +37,18 @@ allowed, in parallel with DS-1 (licensed reference set) and BE-7 (bulk ingest / 
 ## Known failures / risks
 - None failing in automated checks.
 - Silence gate −60 dBFS is uncalibrated (F-011).
-- expo-doctor 19/20 since new SDK 58 patch releases (F-035, MOB-10).
-- `npm audit`: 47 advisories in Expo/Metro/Jest tooling (F-023).
+- `npm audit`: 55 advisories (25 moderate, 30 high) in Expo/Metro/Jest tooling (F-023).
 - FFmpeg not yet sandboxed beyond protocol/format allowlists + timeouts (BE-12).
 
 ## Blocking issues
 - M0 blocked by developer decision for this machine (no model work on the work computer).
 - MOB-2 needs a developer with a phone (Expo Go SDK 58) on the same LAN as the backend.
 
-## Latest test results (2026-10-17)
+## Latest test results
+- 2026-10-20 (after Expo SDK 58 patch update, IT-010): `apps/mobile` typecheck clean; `npm test`
+  **153 passed (9 suites)**; expo-doctor **20/20**; `export:check` android + ios OK; `npm ci` OK.
+
+### 2026-10-17
 - `uv run pytest -q` → **76 passed** (SQLite). With `MUSICCHECK_TEST_DATABASE_URL` (Postgres 17) → **76 passed**.
 - `uv run pytest tests/integration` against compose stack → **5 passed**.
 - `ruff check` / `ruff format --check` → clean.
